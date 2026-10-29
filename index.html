@@ -59,10 +59,27 @@
       flex-wrap: wrap;
     }
 
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      border-radius: 4px;
+      background: #ffffff;
+      flex-shrink: 0;
+    }
+
     .brand {
       margin: 0;
       font-size: 27px;
       letter-spacing: 3px;
+      line-height: 1.25;
     }
 
     .brand small {
@@ -348,6 +365,11 @@
         font-size: 24px;
       }
 
+      .brand-logo {
+        width: 46px;
+        height: 46px;
+      }
+
       .event-box {
         padding: 24px 18px;
       }
@@ -359,9 +381,12 @@
 
   <header>
     <div class="container navbar">
-      <div class="brand">
-        JIVAAN
-        <small>FOOTWEAR MANAGEMENT</small>
+      <div class="brand-wrap">
+        <img class="brand-logo" src="IMG-20261026-WA0005.jpg" alt="JIVAAN logo">
+        <div class="brand">
+          JIVAAN
+          <small>FOOTWEAR MANAGEMENT</small>
+        </div>
       </div>
 
       <nav>
