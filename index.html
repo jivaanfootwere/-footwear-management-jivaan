@@ -1,0 +1,505 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>JIVAAN | Footwear Management</title>
+  <meta name="description" content="JIVAAN provides organised chappal and shoe stand management for temples, spiritual programmes, religious festivals and events. Request a quotation.">
+
+  <style>
+    :root {
+      --green: #183e31;
+      --green-light: #285743;
+      --cream: #f8f5ed;
+      --gold: #c5a66a;
+      --text: #26362e;
+      --muted: #68746c;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .container {
+      width: min(1100px, 90%);
+      margin: auto;
+    }
+
+    header {
+      background: var(--green);
+      color: var(--white);
+      padding: 18px 0;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      margin: 0;
+      font-size: 27px;
+      letter-spacing: 3px;
+    }
+
+    .brand small {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 2px;
+      font-weight: normal;
+    }
+
+    nav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .hero {
+      padding: 80px 0 70px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at top, #e8e5d8, transparent 72%),
+        var(--cream);
+    }
+
+    .eyebrow {
+      color: var(--green-light);
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      color: var(--green);
+      font-size: clamp(36px, 6vw, 62px);
+      line-height: 1.12;
+      margin: 18px auto;
+      max-width: 850px;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: 18px auto;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 13px 23px;
+      border-radius: 5px;
+      background: var(--green);
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 10px 6px;
+      border: 1px solid var(--green);
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--green);
+    }
+
+    section {
+      padding: 60px 0;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .section-heading h2 {
+      color: var(--green);
+      font-size: clamp(27px, 4vw, 38px);
+      line-height: 1.25;
+      margin: 8px 0;
+    }
+
+    .section-heading p {
+      max-width: 650px;
+      margin: 10px auto;
+      color: var(--muted);
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--white);
+      padding: 25px;
+      border: 1px solid #e5e3d8;
+      border-radius: 9px;
+    }
+
+    .card .number {
+      color: var(--gold);
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    .card h3 {
+      color: var(--green);
+      margin: 8px 0;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 0;
+    }
+
+    .how {
+      background: #eeece2;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .step {
+      padding: 20px;
+      border-top: 3px solid var(--gold);
+      background: var(--white);
+    }
+
+    .step h3 {
+      font-size: 17px;
+      color: var(--green);
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .event-box {
+      max-width: 800px;
+      margin: auto;
+      padding: 32px;
+      background: var(--green);
+      color: white;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .event-box h2 {
+      font-size: 30px;
+      line-height: 1.25;
+    }
+
+    .event-box p {
+      color: #e5e9e4;
+    }
+
+    .event-box .button {
+      background: var(--gold);
+      color: #1b3025;
+      border-color: var(--gold);
+    }
+
+    .contact-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .contact-list li {
+      padding: 7px 0;
+    }
+
+    footer {
+      padding: 30px 0;
+      text-align: center;
+      background: #122f25;
+      color: #e8eee9;
+      font-size: 13px;
+    }
+
+    footer p {
+      margin: 5px;
+    }
+
+    @media (max-width: 750px) {
+      .services {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero {
+        padding: 55px 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .services,
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        gap: 12px;
+      }
+
+      .brand {
+        font-size: 24px;
+      }
+
+      .event-box {
+        padding: 24px 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="container navbar">
+      <div class="brand">
+        JIVAAN
+        <small>FOOTWEAR MANAGEMENT</small>
+      </div>
+
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#process">How It Works</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container">
+        <div class="eyebrow">For Spiritual Programmes &amp; Events</div>
+
+        <h1>Footwear Management for Your Event</h1>
+
+        <p>
+          Organised chappal and shoe stand services for temples,
+          spiritual programmes, religious festivals and large gatherings.
+          Helping guests enjoy a smooth and hassle-free experience.
+        </p>
+
+        <a class="button"
+           href="#contact">Request a Quotation</a>
+
+        <a class="button secondary"
+           href="#services">Explore Our Services</a>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">What We Do</div>
+          <h2>Our Footwear Services</h2>
+          <p>
+            Practical footwear management tailored to the size,
+            venue and schedule of your event.
+          </p>
+        </div>
+
+        <div class="services">
+          <article class="card">
+            <div class="number">01</div>
+            <h3>Footwear Stand Management</h3>
+            <p>
+              Organised chappal and shoe collection and arrangement
+              at designated event areas.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="number">02</div>
+            <h3>Token Management</h3>
+            <p>
+              Token-based identification to help match footwear
+              with guests during collection and return.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="number">03</div>
+            <h3>Collection and Return</h3>
+            <p>
+              A coordinated process for receiving, arranging
+              and returning footwear to guests.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="number">04</div>
+            <h3>Event Staff</h3>
+            <p>
+              Staff deployment planned according to guest numbers,
+              event timings and service requirements.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="number">05</div>
+            <h3>Temple Festivals</h3>
+            <p>
+              Footwear arrangements for religious celebrations,
+              temple gatherings and festival events.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="number">06</div>
+            <h3>Large Gatherings</h3>
+            <p>
+              Footwear service planning for spiritual discourses,
+              satsangs and community programmes.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="how" id="process">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">Simple and Organised</div>
+          <h2>How Our Service Works</h2>
+        </div>
+
+        <div class="steps">
+          <article class="step">
+            <h3>01. Share Details</h3>
+            <p>
+              Tell us your event date, venue and expected number
+              of guests.
+            </p>
+          </article>
+
+          <article class="step">
+            <h3>02. Plan Requirements</h3>
+            <p>
+              Discuss the stands, staff, operating hours and
+              service arrangements.
+            </p>
+          </article>
+
+          <article class="step">
+            <h3>03. Get a Quotation</h3>
+            <p>
+              Receive a quotation based on your event requirements
+              and location.
+            </p>
+          </article>
+
+          <article class="step">
+            <h3>04. Confirm Booking</h3>
+            <p>
+              Finalise the schedule, responsibilities and
+              arrangements before the event.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="event-box">
+          <h2>Planning a Spiritual Programme or Event?</h2>
+          <p>
+            Contact JIVAAN to discuss footwear stand arrangements,
+            staffing requirements and a quotation for your event.
+          </p>
+          <a class="button"
+             href="#contact">Enquire About Your Event</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">Get in Touch</div>
+          <h2>Request a Booking</h2>
+          <p>
+            Share your event details to help us understand
+            your footwear management requirements.
+          </p>
+        </div>
+
+        <div class="card" style="max-width:650px;margin:auto;">
+          <h3>JIVAAN | Footwear Management</h3>
+
+          <ul class="contact-list">
+            <li><strong>Service:</strong> Footwear stand management</li>
+            <li><strong>Events:</strong> Spiritual programmes and religious events</li>
+            <li><strong>Booking:</strong> By enquiry and quotation</li>
+          </ul>
+
+          <!-- Replace the example number before publishing. -->
+          <a class="button"
+             href="https://wa.me/91XXXXXXXXXX"
+             target="_blank"
+             rel="noopener">
+            Contact on WhatsApp
+          </a>
+
+          <p style="font-size:13px;color:#68746c;">
+            Please replace the example WhatsApp number in the
+            website code with your business contact number.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p><strong>JIVAAN | Footwear Management</strong></p>
+      <p>For Spiritual Programmes &amp; Events</p>
+      <p>Contact us for availability and quotations.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
