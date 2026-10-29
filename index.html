@@ -202,12 +202,28 @@
       border-radius: 9px;
     }
 
+    .gallery-image-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 280px;
+      padding: 10px;
+      background: #eeece2;
+      cursor: zoom-in;
+    }
+
     .gallery-card img {
       display: block;
       width: 100%;
-      height: 260px;
-      object-fit: cover;
+      height: 280px;
+      object-fit: contain;
       background: #eeece2;
+    }
+
+    .gallery-image-link:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: -3px;
     }
 
     .gallery-card .gallery-caption {
@@ -316,8 +332,12 @@
         grid-template-columns: 1fr;
       }
 
+      .gallery-image-link {
+        min-height: 240px;
+      }
+
       .gallery-card img {
-        height: 230px;
+        height: 240px;
       }
 
       nav {
@@ -457,26 +477,52 @@
 
         <div class="gallery">
           <article class="gallery-card">
-            <img src="IMG-20261012-WA0001.jpg" alt="Footwear management setup for an event" loading="lazy">
+            <a class="gallery-image-link" href="IMG-20261012-WA0001.jpg" target="_blank" rel="noopener" aria-label="Open full-size footwear setup photo">
+              <img src="IMG-20261012-WA0001.jpg" alt="Footwear management setup at an event — click to view full image" loading="lazy">
+            </a>
             <div class="gallery-caption">
               <h3>Footwear Setup</h3>
-              <p>Organised space for footwear collection and return.</p>
+              <p>Tap the photo to open the full-size image.</p>
             </div>
           </article>
 
           <article class="gallery-card">
-            <img src="file_00000000a2c08211ab74a4211da24127.png" alt="JIVAAN footwear management event image" loading="lazy">
+            <a class="gallery-image-link" href="1793263061795.png" target="_blank" rel="noopener" aria-label="Open full-size footwear stand photo">
+              <img src="1793263061795.png" alt="Footwear stand image — click to view full image" loading="lazy">
+            </a>
+            <div class="gallery-caption">
+              <h3>Footwear Stand</h3>
+              <p>Tap the photo to open the full-size image.</p>
+            </div>
+          </article>
+
+          <article class="gallery-card">
+            <a class="gallery-image-link" href="jivaan_footwear_management_with_rack_13x19.png" target="_blank" rel="noopener" aria-label="Open full-size JIVAAN footwear stand and rack image">
+              <img src="jivaan_footwear_management_with_rack_13x19.png" alt="JIVAAN footwear management stand and rack design — click to view full image" loading="lazy">
+            </a>
+            <div class="gallery-caption">
+              <h3>Stand and Rack Design</h3>
+              <p>Tap the photo to open the full-size image.</p>
+            </div>
+          </article>
+
+          <article class="gallery-card">
+            <a class="gallery-image-link" href="file_00000000a2c08211ab74a4211da24127.png" target="_blank" rel="noopener" aria-label="Open full-size JIVAAN event image">
+              <img src="file_00000000a2c08211ab74a4211da24127.png" alt="JIVAAN footwear management event image — click to view full image" loading="lazy">
+            </a>
             <div class="gallery-caption">
               <h3>Event Arrangement</h3>
-              <p>Footwear service presentation for event organisers.</p>
+              <p>Tap the photo to open the full-size image.</p>
             </div>
           </article>
 
           <article class="gallery-card">
-            <img src="file_00000000f4e0823082acc24618d92c56.png" alt="JIVAAN footwear management promotional image" loading="lazy">
+            <a class="gallery-image-link" href="file_00000000f4e0823082acc24618d92c56.png" target="_blank" rel="noopener" aria-label="Open full-size JIVAAN service image">
+              <img src="file_00000000f4e0823082acc24618d92c56.png" alt="JIVAAN footwear management promotional image — click to view full image" loading="lazy">
+            </a>
             <div class="gallery-caption">
               <h3>JIVAAN Service Display</h3>
-              <p>Footwear management information for visitors and organisers.</p>
+              <p>Tap the photo to open the full-size image.</p>
             </div>
           </article>
         </div>
