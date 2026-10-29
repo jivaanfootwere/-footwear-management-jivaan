@@ -189,6 +189,43 @@
       background: #eeece2;
     }
 
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .gallery-card {
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid #e5e3d8;
+      border-radius: 9px;
+    }
+
+    .gallery-card img {
+      display: block;
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      background: #eeece2;
+    }
+
+    .gallery-card .gallery-caption {
+      padding: 16px 18px;
+    }
+
+    .gallery-caption h3 {
+      margin: 0 0 5px;
+      color: var(--green);
+      font-size: 17px;
+    }
+
+    .gallery-caption p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
     .steps {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -262,7 +299,8 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .steps {
+      .steps,
+      .gallery {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -273,8 +311,13 @@
 
     @media (max-width: 480px) {
       .services,
-      .steps {
+      .steps,
+      .gallery {
         grid-template-columns: 1fr;
+      }
+
+      .gallery-card img {
+        height: 230px;
       }
 
       nav {
@@ -305,6 +348,7 @@
         <a href="#home">Home</a>
         <a href="#services">Services</a>
         <a href="#process">How It Works</a>
+        <a href="#gallery">Gallery</a>
         <a href="#contact">Contact</a>
       </nav>
     </div>
@@ -395,6 +439,45 @@
               Footwear service planning for spiritual discourses,
               satsangs and community programmes.
             </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">A Look at Our Work</div>
+          <h2>Footwear Management Gallery</h2>
+          <p>
+            See examples of footwear arrangements and JIVAAN service materials.
+            Event requirements vary by venue, guest numbers and programme schedule.
+          </p>
+        </div>
+
+        <div class="gallery">
+          <article class="gallery-card">
+            <img src="IMG-20261012-WA0001.jpg" alt="Footwear management setup for an event" loading="lazy">
+            <div class="gallery-caption">
+              <h3>Footwear Setup</h3>
+              <p>Organised space for footwear collection and return.</p>
+            </div>
+          </article>
+
+          <article class="gallery-card">
+            <img src="file_00000000a2c08211ab74a4211da24127.png" alt="JIVAAN footwear management event image" loading="lazy">
+            <div class="gallery-caption">
+              <h3>Event Arrangement</h3>
+              <p>Footwear service presentation for event organisers.</p>
+            </div>
+          </article>
+
+          <article class="gallery-card">
+            <img src="file_00000000f4e0823082acc24618d92c56.png" alt="JIVAAN footwear management promotional image" loading="lazy">
+            <div class="gallery-caption">
+              <h3>JIVAAN Service Display</h3>
+              <p>Footwear management information for visitors and organisers.</p>
+            </div>
           </article>
         </div>
       </div>
