@@ -1,0 +1,10 @@
+{
+  "name": "JIVAAN Footwear Management",
+  "short_name": "JIVAAN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f5f7",
+  "theme_color": "#14243a",
+  "description": "Offline-first footwear bag and token management"
+}
