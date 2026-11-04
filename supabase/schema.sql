@@ -5,9 +5,9 @@ create schema if not exists private;
 revoke all on schema private from public,anon;
 grant usage on schema private to authenticated;
 create or replace function private.has_jivaan_role(allowed_roles text[]) returns boolean
-language sql stable security definer set search_path='' as $
+language sql stable security definer set search_path='' as $$
   select exists(select 1 from public.profiles p where p.user_id=(select auth.uid()) and p.role=any(allowed_roles));
-$;
+$$;
 revoke all on function private.has_jivaan_role(text[]) from public,anon;
 grant execute on function private.has_jivaan_role(text[]) to authenticated;
 create policy "read own profile" on public.profiles for select to authenticated using((select auth.uid())=user_id);
