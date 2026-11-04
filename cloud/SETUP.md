@@ -7,7 +7,7 @@ The cloud dashboard is at https://jivaanfootwere.github.io/-footwear-management-
 2. Open SQL Editor, create a query, copy all of supabase/schema.sql from this repository, paste it, and run it.
 3. Open Authentication > Users and sign up with jivaanhq@gmail.com through the app. The database trigger assigns that exact email the admin role. Use a strong password.
 4. Open Project Settings > API Keys. Copy the Project URL and the publishable key (or legacy anon key). Never use a secret/service_role key.
-5. Open the cloud dashboard URL above, paste the Project URL and publishable/anon key, connect, and sign in.
+5. In Supabase Dashboard > Integrations > Data API, make sure the public schema is exposed. New Supabase projects no longer expose newly created public tables automatically. Then open the cloud dashboard URL above, paste the Project URL and publishable/anon key, connect, and sign in.
 6. New staff accounts are pending until an admin approves them. Approve only trusted staff by changing their role in public.profiles to staff or supervisor using Supabase SQL Editor.
 7. Test one bag on two devices before a live event. Confirm deposit, return, expiry handling and supervisor recovery.
 
