@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14243a"><meta name="description" content="Offline-first JIVAAN footwear bag and token management">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>JIVAAN Footwear Desk</title>
+<style>
+:root{--navy:#14243a;--gold:#c7a45a;--bg:#f3f5f7;--ink:#17212f;--muted:#64748b;--line:#dce2e8;--green:#18794e;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,Arial,sans-serif}
+header{background:var(--navy);color:#fff;padding:16px max(16px,env(safe-area-inset-left));border-bottom:4px solid var(--gold)}
+header strong{font-size:22px;letter-spacing:2px}header small{display:block;color:#d7e0e9;font-size:11px;letter-spacing:1.5px}
+main{max-width:1050px;margin:auto;padding:14px}.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+button,.btn{border:0;border-radius:9px;padding:12px 14px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;font-size:14px}
+button.light{background:#e5eaf0;color:var(--navy)}button.gold{background:var(--gold);color:#182536}button.red{background:var(--red)}
+button:disabled{opacity:.45}section.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0;box-shadow:0 2px 8px #15243a0a}
+h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:12px 0 6px}
+.muted{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.stat{background:#eef2f6;padding:12px;border-radius:10px}.stat b{display:block;font-size:24px}.stat span{font-size:12px;color:var(--muted)}
+input,select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:16px;margin:5px 0 12px;background:white}
+.row{display:flex;gap:9px;flex-wrap:wrap}.row>*{flex:1;min-width:130px}
+.hidden{display:none!important}.msg{background:#eef2f6;padding:11px;border-radius:8px;margin:10px 0;overflow-wrap:anywhere}
+.qrbox{display:flex;align-items:center;justify-content:center;min-height:230px;padding:12px;border:1px dashed #cbd5e1;border-radius:10px;margin:10px auto;max-width:300px}
+.qrbox canvas,.qrbox img{max-width:100%;height:auto}.token{font-size:30px;font-weight:800;text-align:center;letter-spacing:1px}
+table{border-collapse:collapse;width:100%;font-size:13px}td,th{padding:9px;border-bottom:1px solid var(--line);text-align:left}th{background:#f7f8fa}
+.scroll{overflow:auto;max-height:420px}#camera{width:100%;max-width:480px;margin:8px auto;background:#111;border-radius:10px}
+.pill{display:inline-block;background:#e9eef4;padding:4px 8px;border-radius:30px;font-size:11px}
+footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
+@media(max-width:620px){.grid{grid-template-columns:repeat(2,1fr)}main{padding:10px}.nav button{flex:1}}
+@media print{header,.nav,.no-print,footer{display:none!important}body{background:white}.panel{box-shadow:none;border:0}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+<header><strong>JIVAAN</strong><small>FOOTWEAR MANAGEMENT · OFFLINE EVENT DESK</small></header>
+<main>
+<div class="nav no-print">
+<button onclick="page('home')">Dashboard</button><button onclick="page('deposit')">New Deposit</button><button onclick="page('collect')">Collect</button><button onclick="page('bags')">Bags & QR Labels</button><button onclick="page('sync')">Backup / Transfer</button>
+</div>
+<section id="home" class="panel">
+<h2>Event dashboard <span class="pill" id="netState">Checking offline status</span></h2>
+<div class="grid">
+<div class="stat"><b id="total">200</b><span>Total bags · Stall 1</span></div><div class="stat"><b id="available">200</b><span>Available</span></div><div class="stat"><b id="occupied">0</b><span>With customers</span></div><div class="stat"><b id="expired">0</b><span>Expired QR</span></div>
+</div>
+<div class="msg" id="deviceMsg">Records are saved on this device.</div>
+<h3>Token series</h3><div class="scroll"><table><thead><tr><th>Series</th><th>Token range</th><th>Total</th><th>Occupied</th></tr></thead><tbody id="seriesRows"></tbody></table></div>
+<p class="muted">One stall has 200 bags. Add more stalls from the configuration when required. Current pilot is Stall 1.</p>
+</section>
+<section id="deposit" class="panel hidden">
+<h2>New footwear deposit</h2><p class="muted">Scan the permanent QR label on the empty bag, or select a free token.</p>
+<label>Choose available token</label><select id="bagSelect"></select>
+<div class="row"><button class="light" onclick="scanStart('bag')">Scan bag QR with camera</button><button onclick="issue()">Issue bag and create customer QR</button></div>
+<div id="issueArea" class="hidden">
+<div class="msg">Ask the customer to photograph this QR code. The QR is valid for 12 hours.</div>
+<div class="qrbox" id="customerQr"></div><div class="token" id="customerToken"></div>
+<div class="msg" id="expires"></div>
+<div class="row no-print"><button class="gold" onclick="downloadQR()">Save QR image</button><button class="light" onclick="window.print()">Print QR</button></div>
+</div><div class="msg" id="depositMsg">Ready to issue.</div>
+</section>
+<section id="collect" class="panel hidden">
+<h2>Footwear collection</h2><p class="muted">Scan the customer's saved QR picture displayed on their phone. Camera scanning requires a supported browser camera.</p>
+<div class="row no-print"><button onclick="scanStart('customer')">Open camera scanner</button><button class="light" onclick="stopScan()">Stop scanner</button></div>
+<video id="camera" class="hidden" playsinline></video>
+<label>Or enter customer QR code manually</label><input id="ticketCode" placeholder="Paste or type ticket code">
+<button onclick="findTicket()">Find customer / bag</button>
+<div id="collectArea" class="hidden">
+<div class="token" id="collectToken"></div><div class="msg" id="collectDetails"></div>
+<p><b>Before handing over:</b> physically verify the footwear in the identified bag.</p>
+<button class="gold" onclick="completeCollection()">Confirm footwear returned</button>
+</div><div class="msg" id="collectMsg">Waiting for customer QR.</div>
+</section>
+<section id="bags" class="panel hidden">
+<h2>Bag inventory and permanent QR labels</h2>
+<label>Filter series</label><select id="seriesFilter" onchange="renderBags()"><option value="all">All series</option><option>A</option><option>B</option><option>C</option><option>D</option></select>
+<div class="scroll"><table><thead><tr><th>Token</th><th>Status</th><th>Permanent QR</th></tr></thead><tbody id="bagRows"></tbody></table></div>
+<div id="labelArea" class="hidden"><h3 id="labelToken"></h3><div class="qrbox" id="bagQr"></div><button class="light no-print" onclick="window.print()">Print label</button></div>
+</section>
+<section id="sync" class="panel hidden">
+<h2>Offline backup and transfer</h2>
+<div class="msg"><b>Important:</b> offline records are stored separately on each device. To move records between the tablet and staff phone without internet, export a backup here and transfer the JSON file using Bluetooth / Quick Share, then import it on the other device. This is manual transfer, not automatic live sync.</div>
+<button onclick="exportData()">Download backup file</button>
+<h3>Import backup on this device</h3><input type="file" id="importFile" accept="application/json">
+<button class="gold" onclick="importData()">Import and merge backup</button>
+<div class="msg" id="syncMsg">Export a backup before changing devices or clearing browser data.</div>
+</section>
+</main>
+<footer>JIVAAN Footwear Management · Offline-first pilot · Stall 1 · 200 bags</footer>
+<script>
+const DBKEY='jivaan_offline_v1', STALL='STALL-1', TTL=12*60*60*1000;
+const series=[{key:'A',start:1,end:50},{key:'B',start:51,end:100},{key:'C',start:101,end:150},{key:'D',start:151,end:200}];
+function fresh(){const bags={};series.forEach(s=>{for(let n=s.start;n<=s.end;n++){let token=s.key+n;bags[token]={token,stall:STALL,status:'available',ticket:null}}});return {version:1,stall:STALL,bags,tickets:{},history:[],updatedAt:Date.now()}}
+let db=load(),activeTicket=null,stream=null,scanMode='customer',lastQR='';
+function load(){try{let x=JSON.parse(localStorage.getItem(DBKEY));if(x&&x.bags&&x.tickets)return x}catch(e){}return fresh()}
+function save(){db.updatedAt=Date.now();localStorage.setItem(DBKEY,JSON.stringify(db));render()}
+function page(id){['home','deposit','collect','bags','sync'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));stopScan();if(id==='deposit')fillSelect();if(id==='bags')renderBags();if(id==='home')render()}
+function now(){return Date.now()}
+function expired(t){return !t.used&&now()>t.expiresAt}
+function render(){let vals=Object.values(db.bags),occ=vals.filter(b=>b.status==='occupied').length;document.getElementById('total').textContent=vals.length;document.getElementById('available').textContent=vals.length-occ;document.getElementById('occupied').textContent=occ;document.getElementById('expired').textContent=Object.values(db.tickets).filter(expired).length;document.getElementById('netState').textContent=navigator.onLine?'Online (local-first)':'Offline';document.getElementById('deviceMsg').textContent='Last saved on this device: '+new Date(db.updatedAt||now()).toLocaleString();document.getElementById('seriesRows').innerHTML=series.map(s=>{let arr=Object.values(db.bags).filter(b=>b.token[0]===s.key);return '<tr><td>'+s.key+'</td><td>'+s.key+s.start+'–'+s.key+s.end+'</td><td>50</td><td>'+arr.filter(b=>b.status==='occupied').length+'</td></tr>'}).join('');fillSelect()}
+function fillSelect(){let sel=document.getElementById('bagSelect');if(!sel)return;let free=Object.values(db.bags).filter(b=>b.status==='available').sort((a,b)=>series.findIndex(s=>s.key===a.token[0])-series.findIndex(s=>s.key===b.token[0])||parseInt(a.token.slice(1))-parseInt(b.token.slice(1)));sel.innerHTML=free.map(b=>'<option value="'+b.token+'">'+b.token+' · '+b.stall+'</option>').join('');if(!free.length)sel.innerHTML='<option>No available bags</option>'}
+function makeCode(){return 'JVN-'+Date.now().toString(36).toUpperCase()+'-'+crypto.getRandomValues(new Uint32Array(1))[0].toString(36).toUpperCase()}
+function issue(){let token=document.getElementById('bagSelect').value;if(!db.bags[token]||db.bags[token].status!=='available'){document.getElementById('depositMsg').textContent='Choose an available token.';return}let code=makeCode(),createdAt=now(),expiresAt=createdAt+TTL;db.tickets[code]={code,token,stall:STALL,createdAt,expiresAt,used:false};db.bags[token].status='occupied';db.bags[token].ticket=code;db.history.unshift({type:'deposit',token,code,at:createdAt});save();document.getElementById('customerQr').innerHTML='';if(window.QRCode){new QRCode(document.getElementById('customerQr'),{text:code,width:230,height:230,correctLevel:QRCode.CorrectLevel.M})}else{document.getElementById('customerQr').textContent='QR library unavailable. Reopen once while online to cache the QR generator.'}document.getElementById('customerToken').textContent=token;document.getElementById('expires').textContent='Valid until '+new Date(expiresAt).toLocaleString()+' · 12-hour expiry';document.getElementById('issueArea').classList.remove('hidden');document.getElementById('depositMsg').textContent='Deposit saved on this device. Customer should photograph the QR now.';lastQR=code}
+function downloadQR(){let el=document.querySelector('#customerQr canvas')||document.querySelector('#customerQr img');if(!el){alert('QR not ready');return}let a=document.createElement('a');a.download='JIVAAN-'+document.getElementById('customerToken').textContent+'.png';a.href=el.tagName==='CANVAS'?el.toDataURL('image/png'):el.src;a.click()}
+function parseQR(raw){let v=String(raw||'').trim();if(v.startsWith('JIVAAN-BAG:'))return {kind:'bag',token:v.split(':').pop()};return {kind:'ticket',code:v}}
+function scanStart(mode){scanMode=mode;let video=document.getElementById('camera');if(!('BarcodeDetector'in window)){alert('This browser does not support built-in QR camera scanning. Use a USB QR scanner or enter the QR code manually.');return}stopScan();video.classList.remove('hidden');navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(s=>{stream=s;video.srcObject=s;video.play();let detector=new BarcodeDetector({formats:['qr_code']});let tick=async()=>{if(!stream)return;try{let codes=await detector.detect(video);if(codes.length){handleScan(codes[0].rawValue);stopScan();return}}catch(e){}requestAnimationFrame(tick)};requestAnimationFrame(tick)}).catch(e=>alert('Camera permission or camera unavailable: '+e.message))}
+function stopScan(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}let v=document.getElementById('camera');if(v){v.pause();v.srcObject=null;v.classList.add('hidden')}}
+function handleScan(raw){let p=parseQR(raw);if(p.kind==='bag'){let b=db.bags[p.token];if(!b){alert('Bag QR not recognised: '+p.token);return}if(b.status!=='available'){alert(p.token+' is not available.');return}page('deposit');document.getElementById('bagSelect').value=p.token;issue()}else{page('collect');document.getElementById('ticketCode').value=p.code;findTicket()}}
+function findTicket(){let code=document.getElementById('ticketCode').value.trim(),t=db.tickets[code],msg=document.getElementById('collectMsg'),area=document.getElementById('collectArea');area.classList.add('hidden');activeTicket=null;if(!t){msg.textContent='Ticket not found on this device. If it was issued on another offline device, transfer the backup first.';return}if(t.used){msg.textContent='This QR has already been used.';return}if(now()>t.expiresAt){msg.textContent='This QR expired after 12 hours. Use supervisor recovery and verify identity/token manually.';return}let b=db.bags[t.token];if(!b||b.ticket!==code||b.status!=='occupied'){msg.textContent='Record mismatch. Stop and ask supervisor.';return}activeTicket=code;document.getElementById('collectToken').textContent=t.token;document.getElementById('collectDetails').textContent='Stall: '+t.stall+' · QR valid until '+new Date(t.expiresAt).toLocaleString();area.classList.remove('hidden');msg.textContent='Ticket valid. Verify footwear physically before confirmation.'}
+function completeCollection(){if(!activeTicket)return;let t=db.tickets[activeTicket];if(!t||t.used)return;t.used=true;t.returnedAt=now();db.bags[t.token].status='available';db.bags[t.token].ticket=null;db.history.unshift({type:'collection',token:t.token,code:t.code,at:now()});save();activeTicket=null;document.getElementById('collectArea').classList.add('hidden');document.getElementById('collectMsg').textContent='Collection completed. '+t.token+' is available again.'}
+function renderBags(){let filter=document.getElementById('seriesFilter')?.value||'all',arr=Object.values(db.bags).filter(b=>filter==='all'||b.token.startsWith(filter)).sort((a,b)=>a.token.localeCompare(b.token,undefined,{numeric:true}));document.getElementById('bagRows').innerHTML=arr.map(b=>'<tr><td><b>'+b.token+'</b></td><td>'+(b.status==='available'?'Available':'Occupied')+'</td><td><button class="light" onclick="showBagLabel(\''+b.token+'\')">Show QR</button></td></tr>').join('')}
+function showBagLabel(token){document.getElementById('labelArea').classList.remove('hidden');document.getElementById('labelToken').textContent='PERMANENT BAG QR · '+token;let el=document.getElementById('bagQr');el.innerHTML='';if(window.QRCode)new QRCode(el,{text:'JIVAAN-BAG:'+token,width:230,height:230});else el.textContent='QR generator not available offline yet.'}
+function exportData(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='JIVAAN-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);document.getElementById('syncMsg').textContent='Backup downloaded. Transfer this file to the other device.'}
+async function importData(){let f=document.getElementById('importFile').files[0];if(!f){alert('Choose a JIVAAN backup JSON file first.');return}try{let incoming=JSON.parse(await f.text());if(!incoming.bags||!incoming.tickets)throw Error('Not a JIVAAN backup');Object.entries(incoming.tickets).forEach(([k,v])=>{if(!db.tickets[k]||v.used)db.tickets[k]=v});Object.entries(incoming.bags).forEach(([k,v])=>{let cur=db.bags[k];if(!cur||(!cur.ticket&&v.ticket)||v.status==='available')db.bags[k]=v});db.history=[...(incoming.history||[]),...db.history].filter((x,i,a)=>a.findIndex(y=>y.code===x.code&&y.type===x.type)===i).sort((a,b)=>b.at-a.at);save();document.getElementById('syncMsg').textContent='Backup imported and merged. Check bag status for any conflicts.'}catch(e){alert('Import failed: '+e.message)}}
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+window.addEventListener('online',render);window.addEventListener('offline',render);render();
+</script>
+</body></html>
