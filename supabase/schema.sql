@@ -1,9 +1,18 @@
 create extension if not exists pgcrypto;
 create table if not exists public.profiles(user_id uuid primary key references auth.users(id) on delete cascade,email text not null,role text not null default 'pending' check(role in ('pending','admin','supervisor','staff')),created_at timestamptz not null default now());
 alter table public.profiles enable row level security;
+create schema if not exists private;
+revoke all on schema private from public,anon;
+grant usage on schema private to authenticated;
+create or replace function private.has_jivaan_role(allowed_roles text[]) returns boolean
+language sql stable security definer set search_path='' as $
+  select exists(select 1 from public.profiles p where p.user_id=(select auth.uid()) and p.role=any(allowed_roles));
+$;
+revoke all on function private.has_jivaan_role(text[]) from public,anon;
+grant execute on function private.has_jivaan_role(text[]) to authenticated;
 create policy "read own profile" on public.profiles for select to authenticated using((select auth.uid())=user_id);
-create policy "admin read profiles" on public.profiles for select to authenticated using(exists(select 1 from public.profiles p where p.user_id=(select auth.uid()) and p.role='admin'));
-create policy "admin update profiles" on public.profiles for update to authenticated using(exists(select 1 from public.profiles p where p.user_id=(select auth.uid()) and p.role='admin')) with check(exists(select 1 from public.profiles p where p.user_id=(select auth.uid()) and p.role='admin'));
+create policy "admin read profiles" on public.profiles for select to authenticated using((select private.has_jivaan_role(array['admin'])));
+create policy "admin update profiles" on public.profiles for update to authenticated using((select private.has_jivaan_role(array['admin']))) with check((select private.has_jivaan_role(array['admin'])));
 create or replace function public.handle_jivaan_user() returns trigger language plpgsql security definer set search_path='' as $$ begin insert into public.profiles(user_id,email,role) values(new.id,new.email,case when lower(new.email)='jivaanhq@gmail.com' then 'admin' else 'pending' end) on conflict(user_id) do nothing; return new; end; $$;
 revoke all on function public.handle_jivaan_user() from public,anon,authenticated;
 drop trigger if exists jivaan_auth_user_created on auth.users;
@@ -12,8 +21,11 @@ create table if not exists public.bags(bag_code text primary key check(bag_code 
 create table if not exists public.deposits(token_id text primary key,bag_code text not null references public.bags(bag_code),mobile text not null check(mobile ~ '^[6-9][0-9]{9}$'),event_name text not null,issued_at timestamptz not null default now(),expires_at timestamptz not null,returned_at timestamptz,recovery_reason text,recovered_by uuid references auth.users(id),issued_by uuid not null references auth.users(id));
 create index if not exists deposits_mobile_idx on public.deposits(mobile);
 alter table public.bags enable row level security; alter table public.deposits enable row level security;
-create policy "approved staff read bags" on public.bags for select to authenticated using(exists(select 1 from public.profiles p where p.user_id=(select auth.uid()) and p.role in('admin','supervisor','staff')));
-create policy "approved staff read deposits" on public.deposits for select to authenticated using(exists(select 1 from public.profiles p where p.user_id=(select auth.uid()) and p.role in('admin','supervisor','staff')));
+create policy "approved staff read bags" on public.bags for select to authenticated using((select private.has_jivaan_role(array['admin','supervisor','staff'])));
+create policy "approved staff update bags" on public.bags for update to authenticated using((select private.has_jivaan_role(array['admin','supervisor','staff']))) with check((select private.has_jivaan_role(array['admin','supervisor','staff'])));
+create policy "approved staff read deposits" on public.deposits for select to authenticated using((select private.has_jivaan_role(array['admin','supervisor','staff'])));
+create policy "approved staff insert deposits" on public.deposits for insert to authenticated with check((select private.has_jivaan_role(array['admin','supervisor','staff'])));
+create policy "approved staff update deposits" on public.deposits for update to authenticated using((select private.has_jivaan_role(array['admin','supervisor','staff']))) with check((select private.has_jivaan_role(array['admin','supervisor','staff'])));
 grant select on public.bags,public.deposits,public.profiles to authenticated;
 create or replace function public.issue_footwear_deposit(p_bag_code text,p_mobile text,p_event_name text) returns jsonb language plpgsql security invoker set search_path=public,pg_temp as $$ declare v_token text; v_exp timestamptz; v_role text; v_event text; begin select role into v_role from public.profiles where user_id=auth.uid(); if v_role not in('admin','supervisor','staff') then raise exception 'Account pending admin approval.'; end if; if p_mobile !~ '^[6-9][0-9]{9}$' then raise exception 'Invalid 10-digit mobile.'; end if; v_event:=coalesce(nullif(trim(p_event_name),''),'JIVAAN Event'); update public.bags set status='occupied',updated_at=now() where bag_code=upper(trim(p_bag_code)) and status='available'; if not found then raise exception 'Bag not available or QR not recognised.'; end if; v_token:='JVN-'||upper(substr(replace(gen_random_uuid()::text,'-',''),1,12)); v_exp:=now()+interval '12 hours'; insert into public.deposits(token_id,bag_code,mobile,event_name,expires_at,issued_by) values(v_token,upper(trim(p_bag_code)),p_mobile,v_event,v_exp,auth.uid()); update public.bags set active_token_id=v_token where bag_code=upper(trim(p_bag_code)); return jsonb_build_object('token_id',v_token,'bag_code',upper(trim(p_bag_code)),'expires_at',v_exp,'event_name',v_event); end; $$;
 create or replace function public.verify_footwear_token(p_token_id text) returns jsonb language plpgsql security invoker set search_path=public,pg_temp as $$ declare d public.deposits%rowtype; v_role text; begin select role into v_role from public.profiles where user_id=auth.uid(); if v_role not in('admin','supervisor','staff') then raise exception 'Account pending admin approval.'; end if; select * into d from public.deposits where token_id=upper(trim(p_token_id)) and returned_at is null; if not found then raise exception 'Token not found or already returned.'; end if; return jsonb_build_object('token_id',d.token_id,'bag_code',d.bag_code,'mobile',d.mobile,'expired',d.expires_at<now()); end; $$;
