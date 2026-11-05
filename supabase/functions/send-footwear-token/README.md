@@ -39,3 +39,17 @@ The template name and language must match the Supabase secrets exactly. Meta mus
 Deploy this function to the Supabase project `navamrnvmcxudctthcbe` using the Supabase Dashboard Edge Functions editor or the Supabase CLI. The function uses the logged-in staff JWT, checks the staff profile role and saved deposit, then uploads and sends the token image through WhatsApp Cloud API.
 
 A successful API response means WhatsApp accepted the message request. Delivery status should be confirmed from WhatsApp message status/webhook events; acceptance is not the same as delivery.
+
+## One-click deployment through GitHub Actions
+
+A manual deployment workflow is included at `.github/workflows/deploy-whatsapp-function.yml`.
+
+Before it can run, add a GitHub Actions repository secret:
+
+- Open the repository → Settings → Secrets and variables → Actions → New repository secret.
+- Name: `SUPABASE_ACCESS_TOKEN`
+- Value: a Supabase Personal Access Token created by the project owner in Supabase Account → Access Tokens.
+
+Do not paste this token into chat, source code, or a normal GitHub file. After saving the secret, open the repository → Actions → **Deploy JIVAAN WhatsApp function** → Run workflow. The workflow deploys only this Edge Function to project `navamrnvmcxudctthcbe`.
+
+The workflow does not configure Meta credentials. Add the five `META_...` secrets listed above in Supabase Dashboard → Edge Functions → Secrets before testing WhatsApp.
