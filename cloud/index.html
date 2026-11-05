@@ -51,8 +51,20 @@ async function issue(){
   draw(data);
   el('tokenInfo').textContent='Bag '+data.bag_code+' · +91 '+mobile+' · expires '+new Date(data.expires_at).toLocaleString();
   el('tokenArea').classList.remove('hidden');
-  el('scanMsg').textContent='Deposit saved successfully. Token image is ready. WhatsApp sending is not connected yet.';
+  el('scanMsg').textContent='Deposit saved. Sending token image to WhatsApp…';
   await refresh();
+  try {
+   const imageData=el('ticket').toDataURL('image/png');
+   const {data:waData,error:waError}=await db.functions.invoke('send-footwear-token',{
+    body:{tokenId:data.token_id,mobile,imageData}
+   });
+   if(waError)throw waError;
+   if(!waData||!waData.success)throw new Error(waData?.error||'WhatsApp did not confirm the message.');
+   el('scanMsg').textContent='Deposit saved. WhatsApp accepted the token image for delivery.';
+  } catch(waError) {
+   const message=waError&&waError.message?waError.message:String(waError||'Unknown WhatsApp error');
+   el('scanMsg').textContent='Deposit saved and token created, but WhatsApp sending failed: '+message+'. Do not create another deposit. Ask the supervisor to retry sending.';
+  }
  }catch(e){
   const message=e&&e.message?e.message:String(e||'Unknown error');
   el('scanMsg').textContent='Deposit was not confirmed: '+message+'. Do not scan another bag until you check Records for this mobile number.';
