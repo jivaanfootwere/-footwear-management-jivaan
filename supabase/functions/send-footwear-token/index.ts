@@ -20,8 +20,10 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const publishableKeys = JSON.parse(Deno.env.get("SUPABASE_PUBLISHABLE_KEYS") ?? "{}");
     const secretKeys = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") ?? "{}");
-    const anonKey = publishableKeys.default;
-    const serviceKey = secretKeys.default ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    // Supabase provides these standard variables automatically to Edge Functions.
+    // Keep support for the newer key collections as well.
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? publishableKeys.default;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? secretKeys.default;
     const metaToken = Deno.env.get("META_WHATSAPP_TOKEN");
     const phoneNumberId = Deno.env.get("META_PHONE_NUMBER_ID");
     const graphVersion = Deno.env.get("META_GRAPH_API_VERSION") ?? "v23.0";
