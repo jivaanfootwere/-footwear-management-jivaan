@@ -23,5 +23,5 @@ jobs:
             echo "Missing GitHub Actions secret: SUPABASE_ACCESS_TOKEN"
             exit 1
           fi
-          supabase link --project-ref navamrnvmcxudctthcbe
-          supabase functions deploy send-footwear-token --project-ref navamrnvmcxudctthcbe
+          supabase link --project-ref navaminvmcxudctthcbe
+          supabase functions deploy send-footwear-token --project-ref navaminvmcxudctthcbe
