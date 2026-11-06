@@ -24,8 +24,8 @@ Deno.serve(async (req) => {
     // Keep support for the newer key collections as well.
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? publishableKeys.default;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? secretKeys.default;
-    const metaToken = Deno.env.get("META_WHATSAPP_TOKEN");
-    const phoneNumberId = Deno.env.get("META_PHONE_NUMBER_ID");
+    const metaToken = Deno.env.get("META_WHATSAPP_TOKEN") ?? Deno.env.get("WHATSAPP_ACCESS_TOKEN");
+    const phoneNumberId = Deno.env.get("META_PHONE_NUMBER_ID") ?? Deno.env.get("WHATSAPP_PHONE_NUMBER_ID");
     const graphVersion = Deno.env.get("META_GRAPH_API_VERSION") ?? "v23.0";
     const templateName = Deno.env.get("META_TEMPLATE_NAME") ?? "jivaan_footwear_token";
     const templateLanguage = Deno.env.get("META_TEMPLATE_LANGUAGE") ?? "en";
@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
 
     const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
     const { data: profile, error: profileError } = await admin
-      .from("profiles").select("role").eq("id", userData.user.id).maybeSingle();
+      .from("profiles").select("role").eq("user_id", userData.user.id).maybeSingle();
     if (profileError) return json({ error: "Could not verify staff permission." }, 500);
     if (!profile || !["admin", "supervisor", "staff"].includes(profile.role)) {
       return json({ error: "This account is not approved to send customer tokens." }, 403);
