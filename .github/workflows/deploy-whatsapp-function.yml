@@ -1,4 +1,4 @@
-name: Deploy JIVAAN WhatsApp function
+name: Deploy JIVAAN WhatsApp functions
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ jobs:
         with:
           version: latest
 
-      - name: Deploy Edge Function
+      - name: Deploy Edge Functions
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
@@ -25,3 +25,4 @@ jobs:
           fi
           supabase link --project-ref navaminvmcxudctthcbe
           supabase functions deploy send-footwear-token --project-ref navaminvmcxudctthcbe
+          supabase functions deploy whatsapp-webhook --project-ref navaminvmcxudctthcbe --no-verify-jwt
