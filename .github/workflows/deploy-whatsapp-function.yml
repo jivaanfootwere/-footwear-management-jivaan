@@ -24,5 +24,5 @@ jobs:
             exit 1
           fi
           supabase link --project-ref yqgoebdtujjiyxclmbyr
-          supabase functions deploy send-footwear-token --project-ref yqgoebdtujjiyxclmbyr
-          supabase functions deploy whatsapp-webhook --project-ref yqgoebdtujjiyxclmbyr --no-verify-jwt
+          supabase functions deploy send-footwear-token --project-ref yqgoebdtujjiyxclmbyr --yes
+          supabase functions deploy whatsapp-webhook --project-ref yqgoebdtujjiyxclmbyr --no-verify-jwt --yes
