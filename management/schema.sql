@@ -152,9 +152,42 @@ drop trigger if exists jivaan_auth_user_profile on auth.users;
 create trigger jivaan_auth_user_profile after insert on auth.users
 for each row execute function public.jivaan_new_profile();
 
-do $ begin
-  if not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='events') then alter publication supabase_realtime add table public.events; end if;
-  if not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='stands') then alter publication supabase_realtime add table public.stands; end if;
-  if not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='bags') then alter publication supabase_realtime add table public.bags; end if;
-  if not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='deposits') then alter publication supabase_realtime add table public.deposits; end if;
-end $;
+DO $do$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables
+    WHERE pubname = 'supabase_realtime'
+      AND schemaname = 'public'
+      AND tablename = 'events'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.events;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables
+    WHERE pubname = 'supabase_realtime'
+      AND schemaname = 'public'
+      AND tablename = 'stands'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.stands;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables
+    WHERE pubname = 'supabase_realtime'
+      AND schemaname = 'public'
+      AND tablename = 'bags'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.bags;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables
+    WHERE pubname = 'supabase_realtime'
+      AND schemaname = 'public'
+      AND tablename = 'deposits'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.deposits;
+  END IF;
+END;
+$do$;
