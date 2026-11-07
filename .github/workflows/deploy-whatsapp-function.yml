@@ -2,6 +2,11 @@ name: Deploy JIVAAN WhatsApp functions
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'supabase/functions/send-footwear-token/**'
+      - 'supabase/functions/whatsapp-webhook/**'
+      - '.github/workflows/deploy-whatsapp-function.yml'
 
 jobs:
   deploy:
