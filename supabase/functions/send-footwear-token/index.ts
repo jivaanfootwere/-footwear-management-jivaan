@@ -42,9 +42,9 @@ Deno.serve(async (req) => {
 
     const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
     const { data: profile, error: profileError } = await admin
-      .from("profiles").select("role,active").eq("user_id", userData.user.id).maybeSingle();
+      .from("profiles").select("role").eq("user_id", userData.user.id).maybeSingle();
     if (profileError) return json({ error: "Could not verify staff permission." }, 500);
-    if (!profile || profile.active !== true || !["admin", "supervisor", "staff"].includes(profile.role)) {
+    if (!profile || !["admin", "supervisor", "staff"].includes(profile.role)) {
       return json({ error: "This account is not approved to send customer tokens." }, 403);
     }
 
