@@ -97,11 +97,6 @@ Deno.serve(async (req) => {
           language: { code: templateLanguage },
           components: [
             { type: "header", parameters: [{ type: "image", image: { id: upload.id } }] },
-            { type: "body", parameters: [
-              { type: "text", text: String(deposit.bag_code) },
-              { type: "text", text: tokenId },
-              { type: "text", text: expiry },
-            ] },
           ],
         },
       }),
