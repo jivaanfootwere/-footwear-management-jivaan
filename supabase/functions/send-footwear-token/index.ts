@@ -12,6 +12,7 @@ Deno.serve(async (req) => {
     new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
   try {
+    console.info("send-footwear-token: request received");
     if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
     const authHeader = req.headers.get("Authorization") ?? "";
@@ -37,6 +38,7 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
       auth: { persistSession: false, autoRefreshToken: false },
     });
+    console.info("send-footwear-token: checking staff session");
     const { data: userData, error: userError } = await userClient.auth.getUser();
     if (userError || !userData.user) return json({ error: "Your staff session is invalid. Sign in again." }, 401);
 
@@ -48,6 +50,7 @@ Deno.serve(async (req) => {
       return json({ error: "This account is not approved to send customer tokens." }, 403);
     }
 
+    console.info("send-footwear-token: staff verified; reading request");
     const body = await req.json();
     const tokenId = String(body.tokenId ?? "").trim();
     const mobile = String(body.mobile ?? "").replace(/\D/g, "");
@@ -72,18 +75,21 @@ Deno.serve(async (req) => {
     form.append("type", "image/png");
     form.append("file", new Blob([bytes], { type: "image/png" }), "jivaan-token.png");
 
+    console.info("send-footwear-token: uploading token image to WhatsApp");
     const uploadResponse = await fetch(`https://graph.facebook.com/${graphVersion}/${phoneNumberId}/media`, {
       method: "POST",
       headers: { Authorization: `Bearer ${metaToken}` },
       body: form,
     });
     const upload = await uploadResponse.json();
+    console.info("send-footwear-token: image upload response", { status: uploadResponse.status, hasMediaId: Boolean(upload.id), metaError: upload.error?.message ?? null });
     if (!uploadResponse.ok || !upload.id) {
       return json({ error: "WhatsApp image upload failed.", details: upload.error?.message ?? "Meta did not return a media ID." }, 502);
     }
 
     const recipient = "91" + mobile;
     const expiry = new Date(deposit.expires_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+    console.info("send-footwear-token: sending approved template", { templateName, templateLanguage });
     const messageResponse = await fetch(`https://graph.facebook.com/${graphVersion}/${phoneNumberId}/messages`, {
       method: "POST",
       headers: { Authorization: `Bearer ${metaToken}`, "Content-Type": "application/json" },
@@ -102,12 +108,14 @@ Deno.serve(async (req) => {
       }),
     });
     const sent = await messageResponse.json();
+    console.info("send-footwear-token: template response", { status: messageResponse.status, accepted: Boolean(sent.messages?.[0]?.id), metaError: sent.error?.message ?? null });
     if (!messageResponse.ok) {
       return json({ error: "WhatsApp did not accept the token message.", details: sent.error?.message ?? "Template may not be approved or the recipient may not be eligible." }, 502);
     }
 
     return json({ success: true, messageId: sent.messages?.[0]?.id ?? null, status: "accepted_by_whatsapp" });
   } catch (error) {
+    console.error("send-footwear-token: unexpected failure", error instanceof Error ? error.message : String(error));
     return json({ error: error instanceof Error ? error.message : "Unexpected server error." }, 500);
   }
 });
