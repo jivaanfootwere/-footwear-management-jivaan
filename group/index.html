@@ -69,26 +69,26 @@
 const menu=document.getElementById('menu'),links=document.getElementById('links');menu.addEventListener('click',()=>links.classList.toggle('open'));links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
 document.getElementById('year').textContent=new Date().getFullYear();
 const servicePhotos=[
-['https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=900&q=80','Elegant event venue prepared for a celebration'],
-['https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=900&q=80','Wedding venue decoration and floral styling'],
-['https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=900&q=80','Live event stage with lighting and production'],
-['https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=900&q=80','Professional team working together'],
-['https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=80','Professional operations personnel'],
-['https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80','Premium vehicle and valet arrival'],
-['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80','Guest hospitality in a welcoming venue'],
-['https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80','Catering and prepared food service'],
-['https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=80','Professional photography equipment'],
-['https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80','Furniture and event seating arrangement'],
-['https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80','Professional cleaning and housekeeping'],
-['https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=900&q=80','Clean modern washroom facilities'],
-['https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=80','Transport and logistics vehicle'],
-['https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=80','Exhibition and business event space'],
-['https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=80','Live entertainment and audience'],
-['https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=900&q=80','Sports and tournament activity'],
-['https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=80','Brand and campaign planning team'],
-['https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=900&q=80','Warehouse supplies and procurement'],
-['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80','Digital and creative work setup'],
-['https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=900&q=80','Organised footwear and shoe storage']
+['https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=85','Event venue prepared for a formal celebration'],
+['https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=900&q=85','Wedding venue with floral decoration and elegant table setup'],
+['https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=900&q=85','Concert stage with professional sound and lighting'],
+['https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=900&q=85','Temporary event team coordinating together'],
+['https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=900&q=85','Security and crowd safety personnel'],
+['https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85','Premium car arrival for valet parking'],
+['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=85','Guest reception and hospitality at a venue'],
+['https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=85','Food preparation and catering service'],
+['https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=85','Professional camera used for event photography'],
+['https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=85','Furniture and seating arranged for an event'],
+['https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=85','Professional housekeeping and cleaning service'],
+['https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=900&q=85','Clean modern washroom and sanitation facility'],
+['https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=900&q=85','Commercial transport and logistics vehicle'],
+['https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=85','Professional exhibition and business display space'],
+['https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=85','Live entertainment event with stage and audience'],
+['https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=900&q=85','Sports tournament and field activity'],
+['https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=85','Brand activation team planning a campaign'],
+['https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=900&q=85','Warehouse inventory and procurement supplies'],
+['https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=85','Laptop and digital creative workspace'],
+['https://images.unsplash.com/photo-1514989940723-e8e51635b782?auto=format&fit=crop&w=900&q=85','Footwear display with shoes arranged on shelves']
 ];
 document.querySelectorAll('.service').forEach((card,index)=>{const item=servicePhotos[index];if(!item)return;const img=document.createElement('img');img.className='service-photo';img.src=item[0];img.alt=item[1];img.loading='lazy';img.decoding='async';card.prepend(img);});
 document.querySelectorAll('[data-service]').forEach(a=>a.addEventListener('click',()=>{document.getElementById('service').value=a.dataset.service}));
